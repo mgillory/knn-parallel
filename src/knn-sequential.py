@@ -60,16 +60,33 @@ def get_response(neighbors):
   sorted_votes = sorted(class_votes.items(), key=operator.itemgetter(1), reverse=True)
   return sorted_votes[0][0]
 
-trainingSet=[]
-testSet=[]
-ratio = 0.67
-load_data('iris.csv', ratio, trainingSet, testSet)
-print('Train set: ' + repr(len(trainingSet)))
-print('Test set: ' + repr(len(testSet)))
+def get_accuracy(test_set, predictions):
+  """ 
+    Gets the accuracy of our knn algorithm
+  """
+  correct = 0
+  for x in range(len(test_set)):
+    if test_set[x][-1] == predictions[x]:
+      correct += 1
+  return (correct/float(len(test_set))) * 100.0
 
-k = 3
-for x in range(len(testSet)):
-  neighbors = get_neighbors(trainingSet, testSet[x], k)
-  result = get_response(neighbors)
-  print(x)
-  print(result)
+def main():
+  # prepare data
+  trainingSet=[]
+  testSet=[]
+  ratio = 0.67
+  load_data('iris.csv', ratio, trainingSet, testSet)
+  print('Train set: ' + repr(len(trainingSet)))
+  print('Test set: ' + repr(len(testSet)))
+  # generate predictions
+  predictions=[]
+  k = 3
+  for x in range(len(testSet)):
+    neighbors = get_neighbors(trainingSet, testSet[x], k)
+    result = get_response(neighbors)
+    predictions.append(result)
+    print('> predicted=' + repr(result) + ', actual=' + repr(testSet[x][-1]))
+  accuracy = get_accuracy(testSet, predictions)
+  print('Accuracy: ' + repr(accuracy) + '%')
+	
+main()
