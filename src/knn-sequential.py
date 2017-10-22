@@ -2,6 +2,7 @@ import csv
 import random
 import math
 import operator
+import time
 
 def load_data(filename, ratio, training_set=[], test_set=[]):
   """
@@ -78,6 +79,7 @@ def main():
   load_data('iris.csv', ratio, trainingSet, testSet)
   print('Train set: ' + repr(len(trainingSet)))
   print('Test set: ' + repr(len(testSet)))
+  start = time.time()
   # generate predictions
   predictions=[]
   k = 3
@@ -86,7 +88,9 @@ def main():
     result = get_response(neighbors)
     predictions.append(result)
     print('> predicted=' + repr(result) + ', actual=' + repr(testSet[x][-1]))
+  end = time.time()
   accuracy = get_accuracy(testSet, predictions)
   print('Accuracy: ' + repr(accuracy) + '%')
+  print('Elapsed Time: ' + repr(end-start))
 	
 main()
