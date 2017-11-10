@@ -1,4 +1,12 @@
-import csv, sys, random, math, operator, time
+import csv, sys, random, math, operator, time, threading
+
+class bcolors:
+    WARNING = '\033[93m'
+    FAIL = '\033[91m'
+    ENDC = '\033[0m'
+
+testSetSize = 0
+wrongPredictionsNumber = 0
 
 def load_data(filename, ratio, training_set=[], test_set=[]):
   """
@@ -65,37 +73,63 @@ def get_accuracy(test_set, predictions):
   for x in range(len(test_set)):
     if test_set[x][-1] == predictions[x]:
       correct += 1
-  return (correct/float(len(test_set))) * 100.0
+  return str((correct/float(len(test_set))) * 100.0)
 
+def make_prediction(testValue, trainingSet):
+  k = 3
+  neighbors = get_neighbors(trainingSet, testValue, k)
+  return get_response(neighbors)
+
+def print_result(predicted, actual, pos):
+  space = ''
+  maxSpacingSize = len(repr(testSetSize))
+  actualSpacingSize = len(repr(pos))
+  for i in range(maxSpacingSize - actualSpacingSize):
+    space = space + '0'  	
+  if repr(predicted) == repr(actual):
+    print(space + repr(pos) + '> predicted=' + repr(predicted) + ', actual=' + repr(actual))
+  else: 
+    print(space + bcolors.WARNING + repr(pos) + '> predicted=' + repr(predicted) + ', actual=' + repr(actual) + bcolors.ENDC)	
+
+def make_all_predictions(testSet,trainingSet):
+  predictions = []
+  # generate predictions
+  for x in range(testSetSize):
+    result = make_prediction(testSet[x], trainingSet)
+    predictions.append(result)
+    if repr(result) != repr(testSet[x][-1]):
+      global wrongPredictionsNumber
+      wrongPredictionsNumber += 1
+    print_result(result, testSet[x][-1], x+1)
+  return predictions
+  
 def main():
 	
   # checkin command line arguments
   if(len(sys.argv) != 2):
-	  print('Invalid command line arguments.\nMust be: <program_name> <thread_count>')
+	  print(bcolors.FAIL + 'Invalid command line arguments.\nMust be: <program_name> <thread_count>' + bcolors.ENDC)
 	  sys.exit()
 	  
   thread_number = int(float(sys.argv[1]))
-	
+  threaList = []
+  	
   # prepare data
   trainingSet=[]
   testSet=[]
   ratio = 0.67
   load_data('iris.csv', ratio, trainingSet, testSet)
-  print('Train set: ' + repr(len(trainingSet)))
-  print('Test set: ' + repr(len(testSet)))
+  global testSetSize
+  testSetSize = len(testSet)
   
   start = time.time()
-  # generate predictions
-  predictions=[]
-  k = 3
-  for x in range(len(testSet)):
-    neighbors = get_neighbors(trainingSet, testSet[x], k)
-    result = get_response(neighbors)
-    predictions.append(result)
-    print('> predicted=' + repr(result) + ', actual=' + repr(testSet[x][-1]))
+  predictions = make_all_predictions(testSet,trainingSet)
+  acuracy = get_accuracy(testSet, predictions)
+  
   end = time.time()
-  accuracy = get_accuracy(testSet, predictions)
-  print('Accuracy: ' + repr(accuracy) + '%')
+  print('Train set: ' + repr(len(trainingSet)))
+  print('Test set: ' + repr(testSetSize))
+  print('Wrong Predictions: ' + repr(wrongPredictionsNumber))
+  print('Accuracy: ' + acuracy + '%')
   print('Elapsed Time: ' + repr(end-start))
 	
 main()
