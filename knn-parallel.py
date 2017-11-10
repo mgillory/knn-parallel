@@ -73,7 +73,7 @@ def get_accuracy(test_set, predictions):
   for x in range(len(test_set)):
     if test_set[x][-1] == predictions[x]:
       correct += 1
-  return str((correct/float(len(test_set))) * 100.0)
+  return ((correct/float(len(test_set))) * 100.0)
 
 def make_prediction(testValue, trainingSet):
   k = 3
@@ -123,13 +123,14 @@ def main():
   
   start = time.time()
   predictions = make_all_predictions(testSet,trainingSet)
-  acuracy = get_accuracy(testSet, predictions)
-  
+  accuracy = get_accuracy(testSet, predictions)
+  if type(accuracy) is float:
+	  print('ma oi')
   end = time.time()
   print('Train set: ' + repr(len(trainingSet)))
   print('Test set: ' + repr(testSetSize))
   print('Wrong Predictions: ' + repr(wrongPredictionsNumber))
-  print('Accuracy: ' + acuracy + '%')
+  print('Accuracy: ' + repr(accuracy) + '%')
   print('Elapsed Time: ' + repr(end-start))
 	
 main()
