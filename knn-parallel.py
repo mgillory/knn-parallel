@@ -124,8 +124,7 @@ def main():
   start = time.time()
   predictions = make_all_predictions(testSet,trainingSet)
   accuracy = get_accuracy(testSet, predictions)
-  if type(accuracy) is float:
-	  print('ma oi')
+ 
   end = time.time()
   print('Train set: ' + repr(len(trainingSet)))
   print('Test set: ' + repr(testSetSize))
