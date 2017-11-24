@@ -7,6 +7,7 @@ class bcolors:
 
 test_set_size = 0
 wrong_predictions = 0
+neighbors_number = 0
 
 """
     Loads iris dataset (.csv) and randomly divide dataset into training and tests
@@ -24,9 +25,9 @@ def load_data(filename, ratio, training_set=[], test_set=[]):
         else:
           test_set.append(dataset[x])
 
-""" 
-    Calculates the euclidean distance between two given arrays 
-    <first> and <second> of size <size> 
+"""
+    Calculates the euclidean distance between two given arrays
+    <first> and <second> of size <size>
 """
 def euclidean_distance(first, second, size):
   distance = 0
@@ -35,7 +36,7 @@ def euclidean_distance(first, second, size):
 
   return math.sqrt(distance)
 
-""" 
+"""
     Get <k> neighbors of <test_obj> analyzing the <training_set>
 """
 def get_neighbors(training_set, test_obj, k):
@@ -51,7 +52,7 @@ def get_neighbors(training_set, test_obj, k):
     neighbors.append(distances[x][0])
   return neighbors
 
-""" 
+"""
     Extracts the appropriate class according to the neighbors
 """
 def get_response(neighbors):
@@ -66,8 +67,7 @@ def get_response(neighbors):
   return sorted_votes[0][0]
 
 def make_prediction(test_value, training_set):
-  k = 3
-  neighbors = get_neighbors(training_set, test_value, k)
+  neighbors = get_neighbors(training_set, test_value, neighbors_number)
   return get_response(neighbors)
 
 def print_result(predicted, actual, pos):
@@ -75,11 +75,11 @@ def print_result(predicted, actual, pos):
   max_spacing_size = len(repr(test_set_size))
   actual_spacing_size = len(repr(pos))
   for i in range(max_spacing_size - actual_spacing_size):
-    space = space + '0'     
+    space = space + '0'
   if repr(predicted) == repr(actual):
     print(space + repr(pos) + '> predicted=' + repr(predicted) + ', actual=' + repr(actual))
-  else: 
-    print(space + bcolors.WARNING + repr(pos) + '> predicted=' + repr(predicted) + ', actual=' + repr(actual) + bcolors.ENDC) 
+  else:
+    print(space + bcolors.WARNING + repr(pos) + '> predicted=' + repr(predicted) + ', actual=' + repr(actual) + bcolors.ENDC)
 
 def sequential_knn(test_set, training_set):
   predictions = []
@@ -92,29 +92,38 @@ def sequential_knn(test_set, training_set):
     if repr(result) != repr(test_set[x][-1]):
       global wrong_predictions
       wrong_predictions += 1
-    print_result(result, test_set[x][-1], x+1)
-  
+    #print_result(result, test_set[x][-1], x+1)
+
   return predictions
-  
+
 def main():
-  
+
+  if(len(sys.argv) != 3):
+	  print(bcolors.FAIL + 'Invalid command line arguments.\nMust be: <program name> <ratio> <number of neighbors>' + bcolors.ENDC)
+	  sys.exit()
   # prepare data
   training_set=[]
   test_set=[]
-  ratio = 0.4
+  ratio = float(sys.argv[1])
+  global neighbors_number
+  neighbors_number = int(float(sys.argv[2]))
+
   load_data('breast-cancer-wisconsin.csv', ratio, training_set, test_set)
+
   global test_set_size
   test_set_size = len(test_set)
-  
+
   start = time.time()
   predictions = sequential_knn(test_set,training_set)
   end = time.time()
 
-  print('Training set: ' + repr(len(training_set)))
+  accuracy = ((test_set_size - wrong_predictions)/float(test_set_size)) * 100
+
+  print(bcolors.WARNING + 'Training set: ' + repr(len(training_set)))
   print('Test set: ' + repr(test_set_size))
   print('Wrong Predictions: ' + repr(wrong_predictions))
   print('Right Predictions: ' + repr(test_set_size - wrong_predictions))
-  print('Accuracy: ' + ((test_set_size - wrong_predictions)/float(test_set_size)) + '%')
-  print('Elapsed Time: ' + repr(end-start))
-  
+  print('Accuracy: ' + repr(accuracy) + ' %')
+  print('Elapsed Time: ' + repr(end-start) + bcolors.ENDC)
+
 main()
