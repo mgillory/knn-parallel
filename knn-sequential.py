@@ -6,11 +6,12 @@ class bcolors:
     ENDC = '\033[0m'
 
 test_set_size = 0
+data_set_columns_size = 0
 wrong_predictions = 0
 neighbors_number = 0
 
 """
-    Loads iris dataset (.csv) and randomly divide dataset into training and tests
+    Loads dataset (.csv) and randomly divide dataset into training and tests
     sets in order to perform the knn algorithm
 """
 def load_data(filename, ratio, training_set=[], test_set=[]):
@@ -18,7 +19,7 @@ def load_data(filename, ratio, training_set=[], test_set=[]):
     lines = csv.reader(csvfile)
     dataset = list(lines)
     for x in range(len(dataset)-1):
-      for y in range(9):
+      for y in range(data_set_columns_size):
         dataset[x][y] = int(dataset[x][y])
         if random.random() < ratio:
           training_set.append(dataset[x])
@@ -98,17 +99,21 @@ def sequential_knn(test_set, training_set):
 
 def main():
 
-  if(len(sys.argv) != 3):
-	  print(bcolors.FAIL + 'Invalid command line arguments.\nMust be: <program name> <ratio> <number of neighbors>' + bcolors.ENDC)
+  if(len(sys.argv) != 5):
+	  print(bcolors.FAIL + 'Invalid command line arguments.\nMust be: <program name> <dataset name> <columns size> <ratio> <number of neighbors>' + bcolors.ENDC)
 	  sys.exit()
   # prepare data
   training_set=[]
   test_set=[]
-  ratio = float(sys.argv[1])
-  global neighbors_number
-  neighbors_number = int(float(sys.argv[2]))
+  dataset_name = sys.argv[1]
+  global data_set_columns_size
+  data_set_columns_size = int(float(sys.argv[2]))
+  ratio = float(sys.argv[3])
 
-  load_data('breast-cancer-wisconsin.csv', ratio, training_set, test_set)
+  global neighbors_number
+  neighbors_number = int(float(sys.argv[4]))
+
+  load_data(dataset_name, ratio, training_set, test_set)
 
   global test_set_size
   test_set_size = len(test_set)
