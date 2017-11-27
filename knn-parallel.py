@@ -71,22 +71,22 @@ def get_response(neighbors):
   sorted_votes = sorted(class_votes.items(), key=operator.itemgetter(1), reverse=True)
   return sorted_votes[0][0]
 
-def make_prediction(testValue, training_set):
-  neighbors = get_neighbors(training_set, testValue, neighbors_number)
+def make_prediction(test_obj, training_set):
+  neighbors = get_neighbors(training_set, test_obj, neighbors_number)
   return get_response(neighbors)
 
 def print_result(predicted, actual, pos):
   space = ''
-  maxSpacingSize = len(repr(test_set_size))
-  actualSpacingSize = len(repr(pos))
-  for i in range(maxSpacingSize - actualSpacingSize):
+  max_spacing_size = len(repr(test_set_size))
+  actual_spacing_size = len(repr(pos))
+  for i in range(max_spacing_size - actual_spacing_size):
     space = space + '0'
   if repr(predicted) == repr(actual):
     print(space + repr(pos) + '> predicted=' + repr(predicted) + ', actual=' + repr(actual))
   else:
     print(space + bcolors.WARNING + repr(pos) + '> predicted=' + repr(predicted) + ', actual=' + repr(actual) + bcolors.ENDC)
 
-def parallel_knn(test_set,training_set, current_thread, test_set_size):
+def parallel_knn(test_set, training_set, current_thread, test_set_size):
   # parallelization divide logic
   block_size = int(test_set_size / thread_number)
   index = int(block_size * current_thread)
@@ -126,7 +126,7 @@ def main():
   global thread_number
   thread_number = int(float(sys.argv[5]))
 
-  threadList = []
+  thread_list = []
   training_set = []
   test_set = []
 
@@ -139,8 +139,8 @@ def main():
   for i in range(thread_number):
     thread = Thread(target=parallel_knn,args=(test_set, training_set, i, test_set_size))
     thread.start()
-    threadList.append(thread)
-  for thread in threadList:
+    thread_list.append(thread)
+  for thread in thread_list:
     thread.join()
   end = time.time()
 
