@@ -126,7 +126,6 @@ def main():
   global thread_number
   thread_number = int(float(sys.argv[5]))
 
-  thread_list = []
   training_set = []
   test_set = []
 
@@ -139,8 +138,6 @@ def main():
   for i in range(thread_number):
     thread = Thread(target=parallel_knn,args=(test_set, training_set, i, test_set_size))
     thread.start()
-    thread_list.append(thread)
-  for thread in thread_list:
     thread.join()
   end = time.time()
 
