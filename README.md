@@ -15,7 +15,7 @@ In this case would be 3.
 - **ratio**: decimal number to divide training and test set. Range from [0-1].
 - **number of neighbors**: integer number of neighbors.
 
-### Run example
+### Running
 ```
 #### [Python](https://www.python.org/)
 ```
