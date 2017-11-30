@@ -111,7 +111,7 @@ def main():
 
   # checkin command line arguments
   if(len(sys.argv) != 6):
-	  print(bcolors.FAIL + 'Invalid command line arguments.\nMust be: <program name> <dataset name> <columns size> <ratio> <number of neighbors> <thread count>' + bcolors.ENDC)
+	  print(bcolors.FAIL + 'Invalid command line arguments.\nMust be: <program name> <dataset full path> <columns number> <ratio> <neighbors number> <thread count>' + bcolors.ENDC)
 	  sys.exit()
 
   # prepare data
