@@ -16,7 +16,6 @@ In this case would be 3.
 - **number of neighbors**: integer number of neighbors.
 
 ### Running example
-```
 #### [Python](https://www.python.org/)
 ```
 python knn-sequential.py /fullpath/dataset.csv 5 0.5 3 
