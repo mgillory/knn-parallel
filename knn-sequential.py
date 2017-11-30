@@ -100,7 +100,7 @@ def sequential_knn(test_set, training_set):
 def main():
 
   if(len(sys.argv) != 5):
-	  print(bcolors.FAIL + 'Invalid command line arguments.\nMust be: <program name> <dataset name> <columns size> <ratio> <number of neighbors>' + bcolors.ENDC)
+	  print(bcolors.FAIL + 'Invalid command line arguments.\nMust be: <program name> <dataset full path> <columns number> <ratio> <neighbors number>' + bcolors.ENDC)
 	  sys.exit()
   # prepare data
   training_set=[]
