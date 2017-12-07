@@ -129,7 +129,7 @@ def main():
   training_set = []
   test_set = []
   thread_list = []
-  
+
   load_data(dataset_name, ratio, training_set, test_set)
 
   global test_set_size
@@ -139,9 +139,10 @@ def main():
   for i in range(thread_number):
     thread = Thread(target=parallel_knn,args=(test_set, training_set, i, test_set_size))
     thread.start()
+    thread_list.append(thread)
   for thread in thread_list:
     thread.join()
-    
+
   end = time.time()
 
   accuracy = ((test_set_size - wrong_predictions)/float(test_set_size)) * 100
