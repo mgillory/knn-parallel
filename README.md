@@ -19,12 +19,12 @@ In this case would be 3.
 ### Running example
 #### [Jython](http://www.jython.org/)
 ```
-java -jar jython.jar knn-sequential.py /fullpath/dataset.csv 5 0.5 3 4
+java -jar jython.jar knn-parallel.py /fullpath/dataset.csv 5 0.5 3 4
 ```
 #### [Python](https://www.python.org/)
 ```
-python knn-sequential.py /fullpath/dataset.csv 5 0.5 3 4
+python knn-parallel.py /fullpath/dataset.csv 5 0.5 3 4
 ```
 #### [Iron python](http://ironpython.net/)
 ```
-ipy knn-sequential.py /fullpath/dataset.csv 5 0.5 3 4
+ipy knn-parallel.py /fullpath/dataset.csv 5 0.5 3 4
